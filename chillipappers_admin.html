@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chilli Pappers — 관리자</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1A1A18;
+  --ink2: #2E2E2B;
+  --sage: #5C7A5A;
+  --sage-light: #D4E3D0;
+  --sage-mid: #8FAD8C;
+  --cream: #F8F5F0;
+  --warm-gray: #8C8880;
+  --border: #E2DED8;
+  --white: #FFFFFF;
+  --accent: #C9A96E;
+  --danger: #C0392B;
+  --danger-light: #FDECEA;
+  --sidebar-w: 220px;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: #F2EFE9;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* ── LOGIN ── */
+#login-screen {
+  position: fixed; inset: 0;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+}
+
+.login-box {
+  background: var(--cream);
+  width: 380px;
+  padding: 52px 44px;
+}
+
+.login-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.login-logo span { color: var(--sage); }
+
+.login-sub {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--warm-gray);
+  margin-bottom: 36px;
+}
+
+.field-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--warm-gray);
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.field-input {
+  display: block;
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--border);
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 18px;
+}
+
+.field-input:focus { border-color: var(--sage); }
+
+.login-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--ink);
+  color: white;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 4px;
+}
+
+.login-btn:hover { background: var(--sage); }
+
+.login-error {
+  font-size: 11.5px;
+  color: var(--danger);
+  margin-top: 12px;
+  display: none;
+}
+
+/* ── LAYOUT ── */
+#app { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.sidebar-logo .wordmark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: white;
+}
+
+.sidebar-logo .wordmark span { color: var(--sage-mid); }
+
+.sidebar-logo .admin-badge {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  padding: 16px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 12px 24px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  user-select: none;
+}
+
+.nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+
+.nav-item.active {
+  color: white;
+  border-left-color: var(--sage-mid);
+  background: rgba(255,255,255,0.06);
+  font-weight: 500;
+}
+
+.nav-icon {
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.nav-item.active .nav-icon { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--sage);
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-bottom {
+  padding: 16px 24px 24px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.user-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--sage);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: white;
+  flex-shrink: 0;
+}
+
+.user-name { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; }
+.user-role { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+.logout-btn {
+  width: 100%;
+  padding: 9px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.4);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 36px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 7px 14px;
+  width: 220px;
+}
+
+.topbar-search input {
+  border: none;
+  background: transparent;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12.5px;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+}
+
+.topbar-search input::placeholder { color: var(--warm-gray); }
+
+.notif-btn {
+  position: relative;
+  width: 34px; height: 34px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+
+.notif-dot {
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--sage);
+}
+
+/* ── CONTENT ── */
+.content {
+  padding: 32px 36px;
+  flex: 1;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── STAT CARDS ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--sage);
+}
+
+.stat-card.red::before { background: var(--danger); }
+.stat-card.gold::before { background: var(--accent); }
+.stat-card.blue::before { background: #5A7A9A; }
+
+.stat-label {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-bottom: 10px;
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--warm-gray);
+}
+
+.stat-change {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.stat-change.up { background: #EAF3DE; color: #3B6D11; }
+.stat-change.down { background: var(--danger-light); color: var(--danger); }
+
+/* ── SECTION HEADER ── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sec-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.18s;
+}
+
+.btn-primary { background: var(--ink); color: white; }
+.btn-primary:hover { background: var(--sage); }
+
+.btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--ink); }
+
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid #F5C6C6; }
+.btn-danger:hover { background: var(--danger-light); }
+
+.btn-sage { background: var(--sage); color: white; }
+.btn-sage:hover { background: #4A6648; }
+
+/* ── TABLE ── */
+.table-wrap {
+  background: var(--white);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-filters {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-tab {
+  font-size: 11.5px;
+  color: var(--warm-gray);
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 2px;
+  transition: all 0.15s;
+}
+
+.filter-tab:hover { color: var(--ink); background: var(--cream); }
+.filter-tab.active { color: var(--ink); background: var(--sage-light); font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  font-weight: 500;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--cream);
+  white-space: nowrap;
+}
+
+td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #FAFAF8; }
+
+.td-img {
+  width: 42px; height: 42px;
+  object-fit: cover;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.td-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.td-name { font-weight: 500; font-size: 13px; color: var(--ink); }
+.td-brand { font-size: 11px; color: var(--warm-gray); margin-top: 1px; }
+
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 9px;
+  letter-spacing: 0.05em;
+}
+
+.badge-active { background: #EAF3DE; color: #3B6D11; }
+.badge-draft { background: #F1EFE8; color: #5F5E5A; }
+.badge-sold { background: var(--danger-light); color: var(--danger); }
+.badge-sale { background: #FFF3CD; color: #856404; }
+.badge-beauty { background: #FBEAF0; color: #99355A; }
+.badge-fashion { background: #E6F1FB; color: #185FA5; }
+.badge-wellness { background: var(--sage-light); color: var(--sage); }
+.badge-showcase { background: #FAEEda; color: #854F0B; }
+
+.action-btns { display: flex; gap: 6px; }
+
+.icon-btn {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--warm-gray);
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+.icon-btn.del:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+
+/* ── MODAL ── */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(26,26,24,0.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  display: none;
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal {
+  background: var(--white);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 2;
+}
+
+.modal-title { font-size: 14px; font-weight: 600; }
+
+.modal-close {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--warm-gray);
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--ink); }
+
+.modal-body { padding: 24px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-full { grid-column: 1 / -1; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm-gray); }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12.5px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.18s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--sage); }
+
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+.modal-foot {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── MINI CHART ── */
+.chart-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 28px; }
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+}
+
+.chart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.chart-label { font-size: 13px; font-weight: 600; }
+.chart-period { font-size: 11px; color: var(--warm-gray); }
+
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
+
+.bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+
+.bar {
+  width: 100%;
+  background: var(--sage-light);
+  border-top: 2px solid var(--sage);
+  transition: all 0.3s;
+  cursor: pointer;
+  min-width: 20px;
+}
+
+.bar:hover { background: var(--sage); }
+.bar.highlight { background: var(--sage); border-top-color: #3D5C3B; }
+
+.bar-label { font-size: 9.5px; color: var(--warm-gray); }
+
+.top-list { display: flex; flex-direction: column; gap: 0; }
+
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.top-item:last-child { border-bottom: none; }
+
+.top-rank {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--sage-light);
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.top-name { font-size: 12.5px; font-weight: 500; flex: 1; }
+.top-val { font-size: 12px; color: var(--warm-gray); white-space: nowrap; }
+
+/* ── RECENT ORDERS ── */
+.order-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.dot-paid { background: var(--sage); }
+.dot-shipping { background: var(--accent); }
+.dot-done { background: #5A7A9A; }
+.dot-cancel { background: var(--danger); }
+
+/* ── TOGGLE ── */
+.toggle-wrap { display: flex; align-items: center; gap: 8px; }
+
+.toggle {
+  position: relative;
+  width: 36px; height: 20px;
+  cursor: pointer;
+}
+
+.toggle input { display: none; }
+
+.toggle-track {
+  width: 36px; height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  transition: background 0.2s;
+  display: block;
+}
+
+.toggle input:checked + .toggle-track { background: var(--sage); }
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+
+.toggle input:checked ~ .toggle-thumb { transform: translateX(16px); }
+
+/* ── UPLOAD AREA ── */
+.upload-area {
+  border: 1.5px dashed var(--border);
+  background: var(--cream);
+  padding: 28px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  grid-column: 1 / -1;
+}
+
+.upload-area:hover { border-color: var(--sage); }
+.upload-area p { font-size: 12px; color: var(--warm-gray); margin-top: 6px; }
+
+/* ── SHOWCASE GRID ── */
+.showcase-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.showcase-admin-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.showcase-thumb {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.showcase-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(26,26,24,0);
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.showcase-admin-card:hover .showcase-thumb-overlay { background: rgba(26,26,24,0.45); }
+
+.showcase-thumb-overlay .icon-btn {
+  background: white;
+  border-color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.showcase-admin-card:hover .showcase-thumb-overlay .icon-btn { opacity: 1; }
+
+.showcase-info {
+  padding: 14px 16px;
+}
+
+.showcase-info .sc-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.showcase-info .sc-meta { font-size: 11px; color: var(--warm-gray); margin-top: 3px; }
+
+/* ── PAGE TITLE ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.page-title span {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--sage);
+  margin-left: 4px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--cream);
+}
+
+.pg-btn {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--ink);
+}
+
+.pg-btn:hover, .pg-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+.pg-info { font-size: 11.5px; color: var(--warm-gray); margin-left: auto; }
+
+/* Settings */
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.settings-card { background: var(--white); border: 1px solid var(--border); padding: 24px; }
+.settings-card-title { font-size: 13px; font-weight: 600; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+/* Category pills in settings */
+.cat-pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.cat-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.cat-pill .rm { font-size: 14px; color: var(--warm-gray); line-height: 1; }
+.cat-pill .rm:hover { color: var(--danger); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  background: var(--ink);
+  color: white;
+  padding: 12px 20px;
+  font-size: 12.5px;
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Chilli <span>Pappers</span></div>
+    <div class="login-sub">ADMIN CONSOLE</div>
+    <label class="field-label">아이디</label>
+    <input class="field-input" id="login-id" type="text" placeholder="admin" />
+    <label class="field-label">비밀번호</label>
+    <input class="field-input" id="login-pw" type="password" placeholder="••••••••" />
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="login-err">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+    <div style="font-size:11px;color:#8C8880;margin-top:18px">demo: admin / admin1234</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="wordmark">Chilli <span>Pappers</span></div>
+      <div class="admin-badge">Admin Console</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">메인</div>
+      <div class="nav-item active" onclick="goto('dashboard', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/></svg>
+        대시보드
+      </div>
+
+      <div class="nav-section-label">콘텐츠</div>
+      <div class="nav-item" onclick="goto('products', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4l6-3 6 3v8l-6 3-6-3V4z"/><path d="M8 1v14M2 4l6 3 6-3"/></svg>
+        상품 관리
+        <span class="nav-badge">124</span>
+      </div>
+      <div class="nav-item" onclick="goto('showcase', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="6" height="9"/><rect x="9" y="1" width="6" height="4"/><rect x="9" y="8" width="6" height="7"/><rect x="1" y="12" width="6" height="3"/></svg>
+        Showcase
+      </div>
+      <div class="nav-item" onclick="goto('categories', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 4h14M1 8h10M1 12h6"/></svg>
+        카테고리
+      </div>
+
+      <div class="nav-section-label">운영</div>
+      <div class="nav-item" onclick="goto('orders', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 1h2l2 9h8l2-6H5"/><circle cx="7" cy="13.5" r="1"/><circle cx="13" cy="13.5" r="1"/></svg>
+        주문 관리
+        <span class="nav-badge">7</span>
+      </div>
+      <div class="nav-item" onclick="goto('members', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+        회원 관리
+      </div>
+      <div class="nav-item" onclick="goto('settings', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6 13 13M3 13l1.4-1.4M11.6 4.4 13 3"/></svg>
+        설정
+      </div>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div>
+          <div class="user-name">Admin</div>
+          <div class="user-role">슈퍼 관리자</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">대시보드</div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#8C8880" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="m11 11 3 3"/></svg>
+          <input placeholder="상품, 주문번호 검색..." />
+        </div>
+        <div class="notif-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8C8880" stroke-width="1.5"><path d="M8 1a5 5 0 0 1 5 5c0 4 1 5 1 5H2s1-1 1-5a5 5 0 0 1 5-5z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
+          <span class="notif-dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-title">대시보드 <span>Overview</span></div>
+          <span style="font-size:11.5px;color:var(--warm-gray)">2025년 5월 13일 기준</span>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">오늘 매출</div>
+            <div class="stat-num">4.2M</div>
+            <div class="stat-sub">4,218,400원</div>
+            <div class="stat-change up">↑ 12.4%</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">이번 달 주문</div>
+            <div class="stat-num">381</div>
+            <div class="stat-sub">전월 대비</div>
+            <div class="stat-change up">↑ 8.1%</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-label">품절 상품</div>
+            <div class="stat-num">7</div>
+            <div class="stat-sub">즉시 처리 필요</div>
+            <div class="stat-change down">↑ 3개 증가</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-label">전체 회원</div>
+            <div class="stat-num">12.8K</div>
+            <div class="stat-sub">활성 회원</div>
+            <div class="stat-change up">↑ 2.2%</div>
+          </div>
+        </div>
+
+        <div class="chart-row">
+          <div class="chart-card">
+            <div class="chart-head">
+              <span class="chart-label">주간 매출 추이</span>
+              <span class="chart-period">최근 7일</span>
+            </div>
+            <div class="bar-chart" id="bar-chart"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-head">
+              <span class="chart-label">인기 상품 TOP 5</span>
+            </div>
+            <div class="top-list">
+              <div class="top-item"><div class="top-rank">1</div><div class="top-name">설화수 퍼스트케어 에센스</div><div class="top-val">142건</div></div>
+              <div class="top-item"><div class="top-rank">2</div><div class="top-name">Klairs 리치 모이스처 세럼</div><div class="top-val">98건</div></div>
+              <div class="top-item"><div class="top-rank">3</div><div class="top-name">마르지엘라 바이 더 파이어플레이스</div><div class="top-val">77건</div></div>
+              <div class="top-item"><div class="top-rank">4</div><div class="top-name">오메가3 초임계 캡슐</div><div class="top-val">64건</div></div>
+              <div class="top-item"><div class="top-rank">5</div><div class="top-name">Aesop 파슬리씨드 크림</div><div class="top-val">51건</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec-head">
+          <div class="sec-title">최근 주문</div>
+          <button class="btn btn-ghost" onclick="goto('orders', document.querySelector('[onclick*=orders]'))">전체보기</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>주문번호</th><th>고객명</th><th>상품</th><th>금액</th><th>상태</th><th>일시</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>#CP-20250513-0041</td><td>김지수</td><td>설화수 에센스 외 1건</td><td>115,000원</td><td><span class="badge badge-active"><span class="order-status-dot dot-paid"></span>결제완료</span></td><td>15분 전</td></tr>
+              <tr><td>#CP-20250513-0040</td><td>이민준</td><td>Klairs 세럼</td><td>29,000원</td><td><span class="badge badge-sale"><span class="order-status-dot dot-shipping"></span>배송중</span></td><td>1시간 전</td></tr>
+              <tr><td>#CP-20250513-0039</td><td>박서연</td><td>오메가3 초임계</td><td>42,000원</td><td><span class="badge badge-fashion"><span class="order-status-dot dot-done"></span>배송완료</span></td><td>3시간 전</td></tr>
+              <tr><td>#CP-20250513-0038</td><td>최예준</td><td>마르지엘라 향수</td><td>158,000원</td><td><span class="badge badge-draft"><span class="order-status-dot dot-shipping"></span>배송중</span></td><td>5시간 전</td></tr>
+              <tr><td>#CP-20250513-0037</td><td>정다은</td><td>Aesop 크림 외 2건</td><td>201,000원</td><td><span class="badge badge-active"><span class="order-status-dot dot-paid"></span>결제완료</span></td><td>7시간 전</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── PRODUCTS ── -->
+      <div class="page" id="page-products">
+        <div class="page-header">
+          <div class="page-title">상품 관리 <span>Products</span></div>
+          <button class="btn btn-primary" onclick="openModal('product')">+ 상품 추가</button>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-filters">
+              <span class="filter-tab active" onclick="filterTab(this)">전체 (124)</span>
+              <span class="filter-tab" onclick="filterTab(this)">화장품</span>
+              <span class="filter-tab" onclick="filterTab(this)">패션</span>
+              <span class="filter-tab" onclick="filterTab(this)">영양제</span>
+              <span class="filter-tab" onclick="filterTab(this)">건강식</span>
+            </div>
+            <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px">엑셀 다운로드</button>
+          </div>
+          <table>
+            <thead><tr>
+              <th style="width:40px"><input type="checkbox" /></th>
+              <th>상품명</th><th>카테고리</th><th>가격</th><th>재고</th><th>상태</th><th>등록일</th><th>관리</th>
+            </tr></thead>
+            <tbody id="product-table-body"></tbody>
+          </table>
+          <div class="pagination">
+            <button class="pg-btn active">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">3</button>
+            <button class="pg-btn">›</button>
+            <span class="pg-info">총 124개 상품</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SHOWCASE ── -->
+      <div class="page" id="page-showcase">
+        <div class="page-header">
+          <div class="page-title">Showcase <span>관리</span></div>
+          <button class="btn btn-primary" onclick="openModal('showcase')">+ 쇼케이스 추가</button>
+        </div>
+        <div class="showcase-admin-grid" id="showcase-grid"></div>
+      </div>
+
+      <!-- ── CATEGORIES ── -->
+      <div class="page" id="page-categories">
+        <div class="page-header">
+          <div class="page-title">카테고리 <span>Categories</span></div>
+          <button class="btn btn-primary" onclick="openModal('category')">+ 카테고리 추가</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>카테고리명</th><th>슬러그</th><th>상품 수</th><th>노출</th><th>관리</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><strong>화장품</strong></td><td style="color:var(--warm-gray);font-size:11.5px">beauty</td><td>48</td><td><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></label></td><td><div class="action-btns"><button class="icon-btn" onclick="toast('수정 모드 오픈')">✎</button><button class="icon-btn del" onclick="toast('삭제되었습니다')">✕</button></div></td></tr>
+              <tr><td><strong>패션</strong></td><td style="color:var(--warm-gray);font-size:11.5px">fashion</td><td>31</td><td><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></label></td><td><div class="action-btns"><button class="icon-btn" onclick="toast('수정 모드 오픈')">✎</button><button class="icon-btn del">✕</button></div></td></tr>
+              <tr><td><strong>영양제</strong></td><td style="color:var(--warm-gray);font-size:11.5px">supplements</td><td>22</td><td><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></label></td><td><div class="action-btns"><button class="icon-btn" onclick="toast('수정 모드 오픈')">✎</button><button class="icon-btn del">✕</button></div></td></tr>
+              <tr><td><strong>건강식</strong></td><td style="color:var(--warm-gray);font-size:11.5px">health-food</td><td>15</td><td><label class="toggle"><input type="checkbox" /><span class="toggle-track"></span><span class="toggle-thumb"></span></label></td><td><div class="action-btns"><button class="icon-btn" onclick="toast('수정 모드 오픈')">✎</button><button class="icon-btn del">✕</button></div></td></tr>
+              <tr><td><strong>Showcase</strong></td><td style="color:var(--warm-gray);font-size:11.5px">showcase</td><td>8</td><td><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></label></td><td><div class="action-btns"><button class="icon-btn" onclick="toast('수정 모드 오픈')">✎</button><button class="icon-btn del">✕</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── ORDERS ── -->
+      <div class="page" id="page-orders">
+        <div class="page-header">
+          <div class="page-title">주문 관리 <span>Orders</span></div>
+          <button class="btn btn-ghost">엑셀 내보내기</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-filters">
+              <span class="filter-tab active" onclick="filterTab(this)">전체</span>
+              <span class="filter-tab" onclick="filterTab(this)">결제완료</span>
+              <span class="filter-tab" onclick="filterTab(this)">배송중</span>
+              <span class="filter-tab" onclick="filterTab(this)">배송완료</span>
+              <span class="filter-tab" onclick="filterTab(this)">취소/환불</span>
+            </div>
+          </div>
+          <table>
+            <thead><tr>
+              <th>주문번호</th><th>고객</th><th>상품</th><th>금액</th><th>배송지</th><th>상태</th><th>일시</th><th>관리</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="font-family:monospace;font-size:11px">#CP-0041</td><td>김지수</td><td>설화수 에센스 외 1건</td><td>115,000원</td><td>서울 강남구</td><td><span class="badge badge-active">결제완료</span></td><td>05/13 14:32</td><td><div class="action-btns"><button class="icon-btn" onclick="toast('상세보기')">☰</button></div></td></tr>
+              <tr><td style="font-family:monospace;font-size:11px">#CP-0040</td><td>이민준</td><td>Klairs 세럼</td><td>29,000원</td><td>서울 마포구</td><td><span class="badge badge-sale">배송중</span></td><td>05/13 13:10</td><td><div class="action-btns"><button class="icon-btn" onclick="toast('상세보기')">☰</button></div></td></tr>
+              <tr><td style="font-family:monospace;font-size:11px">#CP-0039</td><td>박서연</td><td>오메가3</td><td>42,000원</td><td>경기 성남시</td><td><span class="badge badge-fashion">배송완료</span></td><td>05/13 11:05</td><td><div class="action-btns"><button class="icon-btn" onclick="toast('상세보기')">☰</button></div></td></tr>
+              <tr><td style="font-family:monospace;font-size:11px">#CP-0038</td><td>최예준</td><td>마르지엘라 향수</td><td>158,000원</td><td>서울 용산구</td><td><span class="badge badge-sale">배송중</span></td><td>05/13 09:48</td><td><div class="action-btns"><button class="icon-btn" onclick="toast('상세보기')">☰</button></div></td></tr>
+              <tr><td style="font-family:monospace;font-size:11px">#CP-0037</td><td>정다은</td><td>Aesop 크림 외 2건</td><td>201,000원</td><td>부산 해운대구</td><td><span class="badge badge-active">결제완료</span></td><td>05/13 08:20</td><td><div class="action-btns"><button class="icon-btn" onclick="toast('상세보기')">☰</button></div></td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <button class="pg-btn active">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">›</button>
+            <span class="pg-info">총 381건</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MEMBERS ── -->
+      <div class="page" id="page-members">
+        <div class="page-header">
+          <div class="page-title">회원 관리 <span>Members</span></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>이름</th><th>이메일</th><th>가입일</th><th>등급</th><th>누적 구매</th><th>상태</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>김지수</td><td>jisu@email.com</td><td>2024.02.14</td><td><span class="badge badge-sale">Gold</span></td><td>1,240,000원</td><td><span class="badge badge-active">활성</span></td></tr>
+              <tr><td>이민준</td><td>minjun@email.com</td><td>2024.08.01</td><td><span class="badge badge-draft">Silver</span></td><td>380,000원</td><td><span class="badge badge-active">활성</span></td></tr>
+              <tr><td>박서연</td><td>seoyeon@email.com</td><td>2025.01.22</td><td><span class="badge badge-draft">Silver</span></td><td>120,000원</td><td><span class="badge badge-active">활성</span></td></tr>
+              <tr><td>최예준</td><td>yejun@email.com</td><td>2023.11.05</td><td><span class="badge badge-wellness">Platinum</span></td><td>4,890,000원</td><td><span class="badge badge-active">활성</span></td></tr>
+              <tr><td>정다은</td><td>daeun@email.com</td><td>2024.06.30</td><td><span class="badge badge-draft">Silver</span></td><td>560,000원</td><td><span class="badge badge-sold">휴면</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <div class="page-title">설정 <span>Settings</span></div>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="settings-card-title">사이트 기본 정보</div>
+            <div class="form-group" style="margin-bottom:14px"><label>사이트명</label><input class="form-group input" value="Chilli Pappers" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none" /></div>
+            <div class="form-group" style="margin-bottom:14px"><label>공지 바 문구</label><input class="form-group input" value="Chilli Pappers 멤버십 · 구매 적립 최대 7%" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none" /></div>
+            <div class="form-group" style="margin-bottom:18px"><label>무료배송 기준 금액</label><input class="form-group input" value="39000" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none" /></div>
+            <button class="btn btn-sage" onclick="toast('설정이 저장되었습니다')">저장</button>
+          </div>
+          <div class="settings-card">
+            <div class="settings-card-title">배송 설정</div>
+            <div class="form-group" style="margin-bottom:14px"><label>기본 배송비</label><input value="3000" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none;width:100%" /></div>
+            <div class="form-group" style="margin-bottom:14px"><label>도서산간 추가배송비</label><input value="5000" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none;width:100%" /></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding:12px;background:var(--cream)">
+              <span style="font-size:12.5px">당일배송 기능</span>
+              <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+            </div>
+            <button class="btn btn-sage" onclick="toast('설정이 저장되었습니다')">저장</button>
+          </div>
+          <div class="settings-card">
+            <div class="settings-card-title">관리자 계정</div>
+            <div class="form-group" style="margin-bottom:14px"><label>이름</label><input value="Admin" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none;width:100%" /></div>
+            <div class="form-group" style="margin-bottom:14px"><label>이메일</label><input value="admin@chillipappers.com" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none;width:100%" /></div>
+            <div class="form-group" style="margin-bottom:18px"><label>새 비밀번호</label><input type="password" placeholder="변경 시에만 입력" style="padding:8px 12px;border:1px solid var(--border);font-family:'Pretendard',sans-serif;font-size:13px;outline:none;width:100%" /></div>
+            <button class="btn btn-sage" onclick="toast('계정 정보가 업데이트되었습니다')">저장</button>
+          </div>
+          <div class="settings-card">
+            <div class="settings-card-title">멤버십 등급 설정</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--cream);font-size:12.5px">
+                <span><strong>Silver</strong></span><span style="color:var(--warm-gray)">0 ~ 299,999원</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#FFF9EC;font-size:12.5px">
+                <span><strong>Gold</strong></span><span style="color:var(--warm-gray)">300,000 ~ 999,999원</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--sage-light);font-size:12.5px">
+                <span><strong>Platinum</strong></span><span style="color:var(--warm-gray)">1,000,000원 이상</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MODAL: Add Product -->
+<div class="modal-backdrop" id="modal-product">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">상품 추가</span>
+      <button class="modal-close" onclick="closeModal('product')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <input type="file" id="product-img-input" accept="image/*" style="display:none" onchange="previewImg(this)" />
+          <div class="upload-area" onclick="document.getElementById('product-img-input').click()">
+            <div id="img-preview" style="font-size:28px;color:var(--border)">📷</div>
+            <p id="img-label">클릭하여 상품 이미지 업로드<br><span style="font-size:10.5px">JPG, PNG, WEBP · 최대 5MB</span></p>
+          </div>
+        </div>
+        <div class="form-group form-full"><label>상품명</label><input id="p-name" placeholder="상품명을 입력하세요" /></div>
+        <div class="form-group"><label>브랜드</label><input id="p-brand" placeholder="브랜드명" /></div>
+        <div class="form-group"><label>카테고리</label><select id="p-cat"><option>화장품</option><option>패션</option><option>영양제</option><option>건강식</option></select></div>
+        <div class="form-group"><label>정가 (원)</label><input id="p-price" type="number" placeholder="0" /></div>
+        <div class="form-group"><label>판매가 (원)</label><input id="p-saleprice" type="number" placeholder="0" /></div>
+        <div class="form-group"><label>재고 수량</label><input id="p-stock" type="number" placeholder="0" /></div>
+        <div class="form-group"><label>상태</label><select id="p-status"><option value="active">판매중</option><option value="soldout">품절</option><option value="draft">숨김</option></select></div>
+        <div class="form-group form-full"><label>상품 설명</label><textarea id="p-desc" placeholder="상품 설명을 입력하세요..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('product')">취소</button>
+      <button class="btn btn-primary" onclick="saveProduct()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Showcase -->
+<div class="modal-backdrop" id="modal-showcase">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">Showcase 추가</span>
+      <button class="modal-close" onclick="closeModal('showcase')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <div class="upload-area" onclick="toast('커버 이미지 업로드')">
+            <div style="font-size:28px;color:var(--border)">🖼</div>
+            <p>커버 이미지 업로드<br><span style="font-size:10.5px">권장 비율 4:5 · 최대 8MB</span></p>
+          </div>
+        </div>
+        <div class="form-group form-full"><label>쇼케이스 제목</label><input placeholder="예: Earthy Minimal" /></div>
+        <div class="form-group"><label>시즌 / 라벨</label><input placeholder="예: SS 2025 · Collection" /></div>
+        <div class="form-group"><label>카테고리 태그</label><input placeholder="예: 패션 · 라이프스타일" /></div>
+        <div class="form-group"><label>상품 수 (items)</label><input type="number" placeholder="0" /></div>
+        <div class="form-group"><label>레이아웃</label><select><option>Large (Tall)</option><option>Standard</option><option>Wide</option></select></div>
+        <div class="form-group form-full"><label>배경 그라디언트</label><input placeholder="예: linear-gradient(160deg, #2C3E35, #1A2820)" /></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('showcase')">취소</button>
+      <button class="btn btn-primary" onclick="saveShowcase()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Category -->
+<div class="modal-backdrop" id="modal-category">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">카테고리 추가</span>
+      <button class="modal-close" onclick="closeModal('category')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-full"><label>카테고리명</label><input placeholder="예: 향수" /></div>
+        <div class="form-group form-full"><label>슬러그 (URL)</label><input placeholder="예: perfume" /></div>
+        <div class="form-group form-full" style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--cream)">
+          <span style="font-size:13px">사이트에 즉시 노출</span>
+          <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('category')">취소</button>
+      <button class="btn btn-primary" onclick="saveCategory()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* ── Firebase 초기화 ── */
+const firebaseConfig = {
+  apiKey: "AIzaSyAy16ROwo8vtUitlFWegXrrAs7wOHbOsXE",
+  authDomain: "our-records.firebaseapp.com",
+  projectId: "our-records",
+  storageBucket: "our-records.firebasestorage.app",
+  messagingSenderId: "1008269378494",
+  appId: "1:1008269378494:web:6df4b251ae90bc09a3efef"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* ── 로그인 ── */
+const CREDS = { id: 'admin', pw: 'admin1234' };
+
+function doLogin() {
+  const id = document.getElementById('login-id').value;
+  const pw = document.getElementById('login-pw').value;
+  if (id === CREDS.id && pw === CREDS.pw) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initPage();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+document.getElementById('login-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-id').value = '';
+  document.getElementById('login-pw').value = '';
+}
+
+/* ── 네비게이션 ── */
+const pageTitles = { dashboard:'대시보드', products:'상품 관리', showcase:'Showcase', categories:'카테고리', orders:'주문 관리', members:'회원 관리', settings:'설정' };
+
+function goto(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('topbar-title').textContent = pageTitles[id] || id;
+}
+
+function filterTab(el) {
+  el.closest('.table-filters').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function openModal(type) { document.getElementById('modal-' + type).classList.add('open'); }
+function closeModal(type) { document.getElementById('modal-' + type).classList.remove('open'); }
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ── 바 차트 ── */
+function buildChart() {
+  const vals = [320, 480, 390, 610, 520, 780, 421];
+  const labels = ['월','화','수','목','금','토','일'];
+  const max = Math.max(...vals);
+  const c = document.getElementById('bar-chart');
+  if (!c) return;
+  c.innerHTML = vals.map((v, i) => `
+    <div class="bar-wrap">
+      <div class="bar ${i===5?'highlight':''}" style="height:${Math.round(v/max*90)}px" title="${v}천원"></div>
+      <div class="bar-label">${labels[i]}</div>
+    </div>`).join('');
+}
+
+/* ── 이미지 미리보기 ── */
+function previewImg(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('img-preview').innerHTML =
+      `<img src="${e.target.result}" style="width:100%;max-height:120px;object-fit:contain;border-radius:4px" />`;
+    document.getElementById('img-label').style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+/* ── 상품 저장 (Firestore에 실제 저장) ── */
+async function saveProduct() {
+  const name     = document.getElementById('p-name').value.trim();
+  const brand    = document.getElementById('p-brand').value.trim();
+  const cat      = document.getElementById('p-cat').value;
+  const priceVal = document.getElementById('p-price').value;
+  const saleVal  = document.getElementById('p-saleprice').value;
+  const stock    = document.getElementById('p-stock').value;
+  const status   = document.getElementById('p-status').value;
+  const desc     = document.getElementById('p-desc').value.trim();
+
+  if (!name) { toast('상품명을 입력해 주세요'); return; }
+
+  const price     = priceVal ? Number(priceVal).toLocaleString() + '원' : '0원';
+  const salePrice = saleVal && Number(saleVal) > 0 ? Number(saleVal).toLocaleString() + '원' : '';
+
+  try {
+    await db.collection('products').add({
+      name, brand, cat, price, salePrice,
+      stock: Number(stock) || 0,
+      status, desc,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    ['p-name','p-brand','p-price','p-saleprice','p-stock','p-desc'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('img-preview').innerHTML = '<span style="font-size:28px;color:var(--border)">📷</span>';
+    document.getElementById('img-label').style.display = '';
+    document.getElementById('product-img-input').value = '';
+    closeModal('product');
+    toast('✓ 상품이 Firebase에 저장되었습니다');
+  } catch(e) {
+    toast('저장 실패: ' + e.message);
+  }
+}
+
+/* ── 상품 삭제 ── */
+async function deleteProduct(id) {
+  if (!confirm('정말 삭제할까요?')) return;
+  try {
+    await db.collection('products').doc(id).delete();
+    toast('✓ 상품이 삭제되었습니다');
+  } catch(e) {
+    toast('삭제 실패: ' + e.message);
+  }
+}
+
+/* ── 상품 목록 실시간 연동 ── */
+const statusMap = { active:['badge-active','판매중'], sale:['badge-sale','할인중'], soldout:['badge-sold','품절'], draft:['badge-draft','숨김'] };
+const catMap = { '화장품':'badge-beauty','패션':'badge-fashion','영양제':'badge-wellness','건강식':'badge-wellness' };
+const catEmoji = { '화장품':'✨','패션':'👗','영양제':'💊','건강식':'🥗' };
+
+function listenProducts() {
+  const tb = document.getElementById('product-table-body');
+  if (!tb) return;
+  tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--warm-gray)">불러오는 중...</td></tr>';
+
+  db.collection('products').onSnapshot(snapshot => {
+    if (snapshot.empty) {
+      tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--warm-gray)">등록된 상품이 없습니다. 상품을 추가해 보세요.</td></tr>';
+      return;
+    }
+    tb.innerHTML = snapshot.docs.map(doc => {
+      const p = doc.data();
+      const pid = doc.id;
+      const [sc, sl] = statusMap[p.status] || ['badge-draft','숨김'];
+      const cc = catMap[p.cat] || 'badge-draft';
+      const emoji = catEmoji[p.cat] || '📦';
+      const dateStr = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) : '-';
+      return `<tr>
+        <td><input type="checkbox" /></td>
+        <td><div class="td-product">
+          <div class="td-img">${emoji}</div>
+          <div><div class="td-name">${p.name}</div><div class="td-brand">${p.brand || ''}</div></div>
+        </div></td>
+        <td><span class="badge ${cc}">${p.cat}</span></td>
+        <td>${p.price}</td>
+        <td style="color:${p.stock===0?'var(--danger)':'var(--ink)'}">${p.stock===0?'품절':p.stock+'개'}</td>
+        <td><span class="badge ${sc}">${sl}</span></td>
+        <td style="font-size:11.5px;color:var(--warm-gray)">${dateStr}</td>
+        <td><div class="action-btns">
+          <button class="icon-btn" onclick="toast('수정 기능 준비중')">✎</button>
+          <button class="icon-btn del" onclick="deleteProduct('${pid}')">✕</button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }, err => {
+    tb.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--danger)">연결 오류: ${err.message}</td></tr>`;
+  });
+}
+
+/* ── Showcase 저장 ── */
+async function saveShowcase() {
+  const inputs = document.querySelectorAll('#modal-showcase input');
+  const title  = inputs[0].value.trim();
+  const season = inputs[1].value.trim();
+  const tag    = inputs[2].value.trim();
+  const items  = inputs[3].value || '0';
+  const selEl  = document.querySelector('#modal-showcase select');
+  const layout = selEl ? selEl.value : 'Standard';
+  const bgInput = inputs[4] ? inputs[4].value.trim() : '';
+
+  if (!title) { toast('쇼케이스 제목을 입력해 주세요'); return; }
+
+  const bgOptions = [
+    'linear-gradient(160deg,#2C3E35,#1A2820)',
+    'linear-gradient(135deg,#8B4A6B,#4A1528)',
+    'linear-gradient(135deg,#3A5068,#1A2D40)',
+    'linear-gradient(135deg,#5C4A2A,#2A1A08)',
+  ];
+  const bg = bgInput || bgOptions[Math.floor(Math.random()*bgOptions.length)];
+  const emojis = ['🌿','✨','💊','👗','🥗','💫'];
+  const emoji = emojis[Math.floor(Math.random()*emojis.length)];
+
+  try {
+    await db.collection('showcases').add({
+      title, season, tag,
+      items: Number(items),
+      layout, bg, emoji,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    closeModal('showcase');
+    toast('✓ Showcase가 Firebase에 저장되었습니다');
+  } catch(e) {
+    toast('저장 실패: ' + e.message);
+  }
+}
+
+/* ── Showcase 삭제 ── */
+async function deleteShowcase(id) {
+  if (!confirm('쇼케이스를 삭제할까요?')) return;
+  await db.collection('showcases').doc(id).delete();
+  toast('✓ 삭제되었습니다');
+}
+
+/* ── Showcase 실시간 연동 ── */
+function listenShowcase() {
+  const g = document.getElementById('showcase-grid');
+  if (!g) return;
+  g.innerHTML = '<div style="color:var(--warm-gray);font-size:12px;padding:20px">불러오는 중...</div>';
+
+  db.collection('showcases').onSnapshot(snapshot => {
+    g.innerHTML = snapshot.docs.map(doc => {
+      const s = doc.data();
+      const sid = doc.id;
+      return `<div class="showcase-admin-card">
+        <div class="showcase-thumb" style="background:${s.bg}">
+          <div style="font-size:40px">${s.emoji}</div>
+          <div class="showcase-thumb-overlay">
+            <button class="icon-btn" onclick="toast('수정 기능 준비중')">✎</button>
+            <button class="icon-btn del" onclick="deleteShowcase('${sid}')">✕</button>
+          </div>
+        </div>
+        <div class="showcase-info">
+          <div class="sc-title">${s.title}</div>
+          <div class="sc-meta">${s.season || ''} · ${s.items||0} items · ${s.tag||''}</div>
+        </div>
+      </div>`;
+    }).join('');
+    g.innerHTML += `<div class="showcase-admin-card" style="border:1.5px dashed var(--border);background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:220px" onclick="openModal('showcase')">
+      <div style="text-align:center;color:var(--warm-gray)">
+        <div style="font-size:32px;margin-bottom:8px">+</div>
+        <div style="font-size:12px">새 쇼케이스 추가</div>
+      </div>
+    </div>`;
+  });
+}
+
+/* ── 카테고리 저장 ── */
+async function saveCategory() {
+  const inputs = document.querySelectorAll('#modal-category input');
+  const name = inputs[0].value.trim();
+  const slug = inputs[1].value.trim();
+  if (!name) { toast('카테고리명을 입력해 주세요'); return; }
+  try {
+    await db.collection('categories').add({ name, slug, visible: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    closeModal('category');
+    toast('✓ 카테고리가 저장되었습니다');
+  } catch(e) {
+    toast('저장 실패: ' + e.message);
+  }
+}
+
+/* ── 초기화 ── */
+function initPage() {
+  buildChart();
+  listenProducts();
+  listenShowcase();
+}
+
+document.querySelectorAll('.modal-backdrop').forEach(bd => {
+  bd.addEventListener('click', e => { if (e.target === bd) bd.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

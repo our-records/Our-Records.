@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chilli Pappers — 당신의 감각을 채우는 곳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F8F5F0;
+    --ink: #1A1A18;
+    --sage: #5C7A5A;
+    --sage-light: #D4E3D0;
+    --sage-mid: #8FAD8C;
+    --warm-gray: #8C8880;
+    --border: #E2DED8;
+    --white: #FFFFFF;
+    --accent: #C9A96E;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── ANNOUNCEMENT BAR ─── */
+  .announce {
+    background: var(--ink);
+    color: #D4E3D0;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-align: center;
+    padding: 9px;
+    font-weight: 400;
+  }
+
+  /* ─── NAVIGATION ─── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248, 245, 240, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 40px;
+    height: 64px;
+  }
+
+  .nav-left {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-left a, .nav-right a {
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--warm-gray);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-left a:hover, .nav-right a:hover { color: var(--ink); }
+
+  .nav-left a.active { color: var(--ink); border-bottom: 1.5px solid var(--sage); padding-bottom: 2px; }
+
+  .logo {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--sage); }
+
+  .nav-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+    stroke: var(--warm-gray);
+    fill: none;
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: stroke 0.2s;
+  }
+
+  .nav-icon:hover { stroke: var(--ink); }
+
+  .cart-badge {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .cart-badge::after {
+    content: '3';
+    position: absolute;
+    top: -6px;
+    right: -7px;
+    background: var(--sage);
+    color: white;
+    font-size: 9px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  /* ─── CATEGORY NAV ─── */
+  .cat-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cat-nav-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cat-nav-inner::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    padding: 14px 24px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    font-family: 'Pretendard', sans-serif;
+    color: var(--warm-gray);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cat-btn:hover { color: var(--ink); }
+  .cat-btn.active { color: var(--ink); border-bottom-color: var(--sage); font-weight: 500; }
+
+  .cat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .cat-btn.active .cat-dot, .cat-btn:hover .cat-dot { opacity: 1; }
+
+  /* ─── HERO ─── */
+  .hero {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 560px;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px 80px 0;
+  }
+
+  .hero-kicker {
+    font-size: 10.5px;
+    letter-spacing: 0.25em;
+    color: var(--sage);
+    text-transform: uppercase;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px;
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .hero-sub {
+    font-size: 13.5px;
+    color: var(--warm-gray);
+    line-height: 1.8;
+    max-width: 380px;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    padding: 14px 28px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.25s;
+    text-transform: uppercase;
+  }
+
+  .btn-primary:hover { background: var(--sage); }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    padding: 13px 24px;
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.25s;
+    text-transform: uppercase;
+  }
+
+  .btn-outline:hover { background: var(--ink); color: white; }
+
+  .hero-img {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-img-fill {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-img-bg {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #D4E3D0 0%, #B8D4B2 40%, #8FAD8C 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-float-tag {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    background: white;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hero-float-tag .tag-label { font-size: 10px; letter-spacing: 0.15em; color: var(--warm-gray); text-transform: uppercase; }
+  .hero-float-tag .tag-value { font-size: 14px; color: var(--ink); font-weight: 500; }
+
+  /* decorative botanical */
+  .botanical {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.18;
+  }
+
+  /* ─── SECTION HEADER ─── */
+  .section-wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .section-title em { font-style: italic; color: var(--sage); }
+
+  .see-all {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    font-family: 'Pretendard', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+
+  .see-all:hover { color: var(--sage); }
+
+  /* ─── PRODUCT GRID ─── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .product-card {
+    background: var(--white);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card:hover { transform: translateY(-4px); z-index: 2; box-shadow: 0 20px 60px rgba(26,26,24,0.1); }
+
+  .product-img {
+    aspect-ratio: 3/4;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-tag {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    padding: 5px 10px;
+    z-index: 2;
+  }
+
+  .tag-new { background: var(--ink); color: white; }
+  .tag-sale { background: var(--sage); color: white; }
+  .tag-best { background: var(--accent); color: white; }
+
+  .wishlist-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    background: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .product-card:hover .wishlist-btn { opacity: 1; }
+
+  .product-info {
+    padding: 18px 20px 22px;
+  }
+
+  .brand-name {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    font-family: 'Pretendard', sans-serif;
+    margin-bottom: 6px;
+  }
+
+  .product-name {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .price-now {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .price-was {
+    font-size: 12px;
+    color: var(--warm-gray);
+    text-decoration: line-through;
+  }
+
+  .price-off {
+    font-size: 11px;
+    color: var(--sage);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* Color swatches */
+  .swatches {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .swatch:hover { transform: scale(1.3); }
+
+  /* ─── CATEGORY BANNER GRID ─── */
+  .cat-banner-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .cat-banner {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    height: 260px;
+    display: flex;
+    align-items: flex-end;
+    transition: transform 0.3s;
+  }
+
+  .cat-banner:hover { transform: scale(1.02); }
+
+  .cat-banner-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s;
+  }
+
+  .cat-banner:hover .cat-banner-bg { transform: scale(1.05); }
+
+  .cat-banner-label {
+    position: relative;
+    z-index: 2;
+    padding: 24px;
+    color: white;
+  }
+
+  .cat-banner-label .sub { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.75; font-family: 'Pretendard', sans-serif; margin-bottom: 4px; }
+  .cat-banner-label .main { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; line-height: 1.1; }
+
+  .bg-beauty { background: linear-gradient(160deg, #D4A6B3 0%, #8B4A6B 100%); }
+  .bg-fashion { background: linear-gradient(160deg, #A3B4C8 0%, #3A5068 100%); }
+  .bg-health { background: linear-gradient(160deg, #A8C8A0 0%, #3D6B38 100%); }
+  .bg-pt { background: linear-gradient(160deg, #C8B89A 0%, #6B4E2A 100%); }
+
+  /* ─── EDITORIAL STRIP ─── */
+  .editorial {
+    background: var(--ink);
+    color: white;
+  }
+
+  .editorial-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .editorial-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sage-mid);
+    font-family: 'Pretendard', sans-serif;
+    margin-bottom: 20px;
+  }
+
+  .editorial-h {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 54px;
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: white;
+  }
+
+  .editorial-h em { font-style: italic; color: var(--sage-mid); }
+
+  .editorial-p {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.9;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: white;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    padding: 13px 24px;
+    border: 1px solid rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: all 0.25s;
+    text-transform: uppercase;
+  }
+
+  .btn-ghost:hover { background: var(--sage); border-color: var(--sage); }
+
+  .editorial-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .editorial-stat {
+    padding: 28px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 46px;
+    font-weight: 300;
+    color: var(--sage-mid);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* ─── SUPPLEMENT ROW ─── */
+  .supp-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+  }
+
+  .supp-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 28px 20px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+  }
+
+  .supp-card:hover {
+    border-color: var(--sage);
+    box-shadow: 0 8px 30px rgba(92,122,90,0.12);
+    transform: translateY(-3px);
+  }
+
+  .supp-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .supp-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .supp-desc {
+    font-size: 11px;
+    color: var(--warm-gray);
+    line-height: 1.5;
+  }
+
+  /* ─── BRAND STRIP ─── */
+  .brand-strip {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+
+  .brand-strip-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 40px;
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .brand-strip-inner::-webkit-scrollbar { display: none; }
+
+  .brand-strip-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    white-space: nowrap;
+    font-family: 'Pretendard', sans-serif;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding-right: 48px;
+  }
+
+  .brand-name-pill {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--ink);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+
+  .brand-name-pill:hover { opacity: 1; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.5);
+  }
+
+  .footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 70px 40px 40px;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    color: white;
+    margin-bottom: 18px;
+  }
+
+  .footer-logo span { color: var(--sage-mid); }
+
+  .footer-tagline {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 260px;
+  }
+
+  .footer-h {
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: white;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .footer-links { display: flex; flex-direction: column; gap: 10px; }
+
+  .footer-links a {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .footer-links a:hover { color: rgba(255,255,255,0.9); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ─── PRODUCT IMAGE PLACEHOLDERS ─── */
+  .pimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeUp 0.7s ease both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  /* ─── FILTER ROW ─── */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .filter-chip {
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    font-family: 'Pretendard', sans-serif;
+  }
+
+  .filter-chip:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+  /* ─── LIFESTYLE BANNER ─── */
+  .lifestyle-banner {
+    background: var(--sage-light);
+    max-width: 1320px;
+    margin: 0 auto 0;
+    padding: 0 40px;
+  }
+
+  .lifestyle-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+    min-height: 340px;
+  }
+
+  .lifestyle-text {
+    padding: 60px 60px 60px 0;
+  }
+
+  .lifestyle-kicker {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .lifestyle-h {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .lifestyle-p {
+    font-size: 13px;
+    color: var(--warm-gray);
+    line-height: 1.8;
+    margin-bottom: 28px;
+  }
+
+  .lifestyle-img-side {
+    height: 340px;
+    background: #B8D4B2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ─── SHOWCASE SECTION ─── */
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px;
+  }
+
+  .showcase-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--border);
+  }
+
+  .showcase-item.tall { grid-row: span 2; }
+
+  .showcase-bg {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .showcase-item.tall .showcase-bg { min-height: 640px; }
+
+  .showcase-item:hover .showcase-bg { transform: scale(1.04); }
+
+  .showcase-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,26,24,0.7) 0%, transparent 55%);
+    transition: opacity 0.3s;
+  }
+
+  .showcase-item:hover .showcase-overlay { opacity: 0.85; }
+
+  .showcase-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px 30px;
+    color: white;
+    transform: translateY(6px);
+    transition: transform 0.3s;
+  }
+
+  .showcase-item:hover .showcase-info { transform: translateY(0); }
+
+  .showcase-season {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+  }
+
+  .showcase-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  .showcase-item.tall .showcase-name { font-size: 40px; }
+
+  .showcase-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s 0.05s;
+  }
+
+  .showcase-item:hover .showcase-meta { opacity: 1; transform: translateY(0); }
+
+  .showcase-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--sage-mid); }
+
+  .showcase-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    padding-bottom: 2px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s 0.1s;
+  }
+
+  .showcase-item:hover .showcase-cta { opacity: 1; transform: translateY(0); }
+
+  /* Responsive tweaks */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-img { min-height: 320px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .cat-banner-grid { grid-template-columns: repeat(2, 1fr); }
+    .supp-row { grid-template-columns: repeat(3, 1fr); }
+    .showcase-grid { grid-template-columns: 1fr; }
+    .showcase-item.tall { grid-row: span 1; }
+    .editorial-inner { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT -->
+<div class="announce">Chilli Pappers 멤버십 · 구매 적립 최대 7% · 무료 배송 39,000원 이상 🌿</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a class="active">여성</a>
+      <a>남성</a>
+      <a>뷰티</a>
+      <a>웰니스</a>
+    </div>
+    <a class="logo">Chilli <span>Pappers</span></a>
+    <div class="nav-right">
+      <a>검색</a>
+      <a>로그인</a>
+      <a>위시리스트</a>
+      <a>장바구니 (3)</a>
+    </div>
+  </div>
+</nav>
+
+<!-- CATEGORY NAV -->
+<div class="cat-nav">
+  <div class="cat-nav-inner">
+    <button class="cat-btn active" onclick="switchCat(this,'beauty')"><span class="cat-dot"></span>화장품</button>
+    <button class="cat-btn" onclick="switchCat(this,'fashion')"><span class="cat-dot"></span>패션</button>
+    <button class="cat-btn" onclick="switchCat(this,'showcase')"><span class="cat-dot"></span>Showcase</button>
+    <button class="cat-btn" onclick="switchCat(this,'supp')"><span class="cat-dot"></span>영양제</button>
+    <button class="cat-btn" onclick="switchCat(this,'health')"><span class="cat-dot"></span>건강식</button>
+    <button class="cat-btn" onclick="switchCat(this,'new')"><span class="cat-dot"></span>신상품</button>
+    <button class="cat-btn" onclick="switchCat(this,'sale')"><span class="cat-dot"></span>세일</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero fade-in">
+  <div class="hero-text">
+    <p class="hero-kicker">2025 Spring Collection</p>
+    <h1 class="hero-h1">감각을<br>채우는<br><em>일상.</em></h1>
+    <p class="hero-sub">뷰티부터 패션, 건강까지—당신의 라이프스타일을 완성하는 모든 것을 Chilli Pappers에서 만나세요.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <button class="btn-primary">지금 쇼핑하기 →</button>
+      <button class="btn-outline">신상품 보기</button>
+    </div>
+  </div>
+  <div class="hero-img">
+    <div class="hero-img-bg">
+      <svg class="botanical" width="380" height="380" viewBox="0 0 380 380" fill="none">
+        <circle cx="190" cy="190" r="160" stroke="#3D6B38" stroke-width="0.5"/>
+        <circle cx="190" cy="190" r="120" stroke="#3D6B38" stroke-width="0.5"/>
+        <line x1="30" y1="190" x2="350" y2="190" stroke="#3D6B38" stroke-width="0.5"/>
+        <line x1="190" y1="30" x2="190" y2="350" stroke="#3D6B38" stroke-width="0.5"/>
+        <ellipse cx="190" cy="190" rx="60" ry="160" stroke="#3D6B38" stroke-width="0.5"/>
+        <ellipse cx="190" cy="190" rx="160" ry="60" stroke="#3D6B38" stroke-width="0.5"/>
+        <circle cx="190" cy="190" r="8" fill="#3D6B38" opacity="0.6"/>
+        <circle cx="190" cy="190" r="30" stroke="#3D6B38" stroke-width="0.5" stroke-dasharray="4 4"/>
+      </svg>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:#fff;letter-spacing:0.2em;opacity:0.9">SPRING</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:#fff;line-height:1;letter-spacing:-0.02em;opacity:0.95">25</div>
+        <div style="font-size:11px;letter-spacing:0.25em;color:rgba(255,255,255,0.6);text-transform:uppercase;font-family:'Pretendard',sans-serif">Collection</div>
+      </div>
+    </div>
+    <div class="hero-float-tag">
+      <span class="tag-label">Featured</span>
+      <span class="tag-value">봄 한정 뷰티 세트</span>
+    </div>
+  </div>
+</div>
+
+<!-- BRAND STRIP -->
+<div class="brand-strip">
+  <div class="brand-strip-inner">
+    <span class="brand-strip-label">파트너 브랜드</span>
+    <span class="brand-name-pill">Aesop</span>
+    <span class="brand-name-pill">Loewe</span>
+    <span class="brand-name-pill">Sulwhasoo</span>
+    <span class="brand-name-pill">Ami</span>
+    <span class="brand-name-pill">Klairs</span>
+    <span class="brand-name-pill">Toteme</span>
+    <span class="brand-name-pill">Dr.Jart+</span>
+    <span class="brand-name-pill">Maison Margiela</span>
+    <span class="brand-name-pill">Some By Mi</span>
+    <span class="brand-name-pill">Cos</span>
+  </div>
+</div>
+
+<!-- CATEGORY BANNERS -->
+<div class="section-wrap" style="padding-bottom:0">
+  <div class="section-header">
+    <h2 class="section-title">카테고리 <em>탐색</em></h2>
+    <a class="see-all">전체보기 →</a>
+  </div>
+  <div class="cat-banner-grid">
+    <div class="cat-banner">
+      <div class="cat-banner-bg bg-beauty"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
+      <div class="cat-banner-label">
+        <div class="sub">Beauty</div>
+        <div class="main">화장품<br>스킨케어</div>
+      </div>
+    </div>
+    <div class="cat-banner">
+      <div class="cat-banner-bg bg-fashion"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
+      <div class="cat-banner-label">
+        <div class="sub">Fashion</div>
+        <div class="main">패션<br>라이프스타일</div>
+      </div>
+    </div>
+    <div class="cat-banner">
+      <div class="cat-banner-bg bg-health"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
+      <div class="cat-banner-label">
+        <div class="sub">Wellness</div>
+        <div class="main">영양제<br>건강식</div>
+      </div>
+    </div>
+    <div class="cat-banner">
+      <div class="cat-banner-bg bg-pt"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
+      <div class="cat-banner-label">
+        <div class="sub">Showcase</div>
+        <div class="main">컬렉션<br>쇼케이스</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BEST SELLERS -->
+<div class="section-wrap">
+  <div class="section-header">
+    <h2 class="section-title"><em>베스트</em> 셀러</h2>
+    <a class="see-all">전체보기 →</a>
+  </div>
+  <div class="filter-row">
+    <button class="filter-chip active">전체</button>
+    <button class="filter-chip">스킨케어</button>
+    <button class="filter-chip">메이크업</button>
+    <button class="filter-chip">향수</button>
+    <button class="filter-chip">헤어케어</button>
+    <button class="filter-chip">바디케어</button>
+  </div>
+  <div class="product-grid" id="product-grid">
+    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--warm-gray);font-size:13px">
+      상품을 불러오는 중...
+    </div>
+  </div>
+</div>
+
+<!-- SUPPLEMENT SECTION -->
+<div class="section-wrap" style="padding-top:0">
+  <div class="section-header">
+    <h2 class="section-title">영양제 &amp; <em>건강식</em></h2>
+    <a class="see-all">전체보기 →</a>
+  </div>
+  <div class="supp-row">
+    <div class="supp-card">
+      <div class="supp-icon" style="background:#FFF3CD">🍋</div>
+      <div class="supp-name">비타민 C 고함량</div>
+      <div class="supp-desc">면역 강화 · 1,000mg · 60정</div>
+    </div>
+    <div class="supp-card">
+      <div class="supp-icon" style="background:#D4E3D0">🌿</div>
+      <div class="supp-name">콜라겐 멀티비타민</div>
+      <div class="supp-desc">피부 탄력 · 해양콜라겐 함유</div>
+    </div>
+    <div class="supp-card">
+      <div class="supp-icon" style="background:#F0EDF5">🫐</div>
+      <div class="supp-name">안토시아닌 블루베리</div>
+      <div class="supp-desc">눈 건강 · 루테인 복합</div>
+    </div>
+    <div class="supp-card">
+      <div class="supp-icon" style="background:#FFE8D6">🐟</div>
+      <div class="supp-name">오메가3 초임계</div>
+      <div class="supp-desc">혈행 개선 · EPA+DHA 고함량</div>
+    </div>
+    <div class="supp-card">
+      <div class="supp-icon" style="background:#E8F4F8">💧</div>
+      <div class="supp-name">마그네슘 글리시네이트</div>
+      <div class="supp-desc">수면 질 개선 · 근육 이완</div>
+    </div>
+  </div>
+</div>
+
+<!-- LIFESTYLE BANNER -->
+<div class="lifestyle-banner">
+  <div class="lifestyle-inner">
+    <div class="lifestyle-text">
+      <div class="lifestyle-kicker">Wellness Edit</div>
+      <h2 class="lifestyle-h">건강한 하루를<br>디자인하다</h2>
+      <p class="lifestyle-p">영양사가 큐레이션한 건강식과 보충제로 루틴을 완성하세요. 나의 라이프스타일에 맞는 웰니스 플랜을 제안합니다.</p>
+      <button class="btn-primary">웰니스 퀴즈 시작 →</button>
+    </div>
+    <div class="lifestyle-img-side">
+      <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="80" stroke="#5C7A5A" stroke-width="0.8" opacity="0.4"/>
+        <circle cx="100" cy="100" r="55" fill="#8FAD8C" opacity="0.15"/>
+        <path d="M100 40 C130 70 130 130 100 160 C70 130 70 70 100 40Z" fill="#5C7A5A" opacity="0.25"/>
+        <path d="M40 100 C70 70 130 70 160 100 C130 130 70 130 40 100Z" fill="#5C7A5A" opacity="0.15"/>
+        <circle cx="100" cy="100" r="12" fill="#5C7A5A" opacity="0.6"/>
+        <text x="100" y="192" font-family="serif" font-size="10" fill="#5C7A5A" text-anchor="middle" opacity="0.6">wellness</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- EDITORIAL STRIP -->
+<div class="editorial">
+  <div class="editorial-inner">
+    <div>
+      <div class="editorial-label">Our Story</div>
+      <h2 class="editorial-h">감각 있는 선택,<br><em>Chilli Pappers.</em></h2>
+      <p class="editorial-p">올리브영의 건강함과 29CM의 감도를 결합했습니다. 화장품부터 건강식, 패션까지 — 당신의 감각적인 일상을 채울 모든 것이 여기 있습니다.</p>
+      <button class="btn-ghost">브랜드 스토리 →</button>
+    </div>
+    <div class="editorial-right">
+      <div class="editorial-stat">
+        <div class="stat-num">1,200+</div>
+        <div class="stat-label">큐레이션된<br>브랜드 파트너</div>
+      </div>
+      <div class="editorial-stat">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">고객 만족도<br>재구매율</div>
+      </div>
+      <div class="editorial-stat">
+        <div class="stat-num">24H</div>
+        <div class="stat-label">당일 배송<br>가능 상품</div>
+      </div>
+      <div class="editorial-stat">
+        <div class="stat-num">0%</div>
+        <div class="stat-label">유해 성분<br>제로 기준</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOWCASE SECTION -->
+<div class="section-wrap">
+  <div class="section-header">
+    <h2 class="section-title"><em>Showcase</em></h2>
+    <a class="see-all">전체 쇼케이스 →</a>
+  </div>
+  <div class="showcase-grid">
+
+    <!-- Large left item -->
+    <div class="showcase-item tall">
+      <div class="showcase-bg" style="background:linear-gradient(160deg,#2C3E35 0%,#1A2820 100%)">
+        <svg width="220" height="340" viewBox="0 0 220 340" fill="none">
+          <rect x="60" y="30" width="100" height="280" rx="50" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <circle cx="110" cy="100" r="40" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+          <rect x="80" y="160" width="60" height="120" rx="30" fill="rgba(255,255,255,0.05)"/>
+          <line x1="110" y1="60" x2="110" y2="320" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <circle cx="110" cy="190" r="55" stroke="rgba(143,173,140,0.3)" stroke-width="0.5" stroke-dasharray="3 5"/>
+        </svg>
+      </div>
+      <div class="showcase-overlay"></div>
+      <div class="showcase-info">
+        <div class="showcase-season">SS 2025 · Collection</div>
+        <div class="showcase-name">Earthy<br>Minimal</div>
+        <div class="showcase-meta">
+          <span>42 items</span>
+          <span class="showcase-dot"></span>
+          <span>패션 · 라이프스타일</span>
+        </div>
+        <div class="showcase-cta">컬렉션 보기 →</div>
+      </div>
+    </div>
+
+    <!-- Top right -->
+    <div class="showcase-item">
+      <div class="showcase-bg" style="background:linear-gradient(135deg,#8B4A6B 0%,#4A1528 100%)">
+        <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
+          <circle cx="80" cy="80" r="60" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+          <circle cx="80" cy="80" r="38" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="0.8"/>
+          <path d="M80 42 L95 72 L128 77 L104 100 L110 133 L80 117 L50 133 L56 100 L32 77 L65 72 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="showcase-overlay"></div>
+      <div class="showcase-info">
+        <div class="showcase-season">Beauty Edit</div>
+        <div class="showcase-name">K-Beauty<br>Essentials</div>
+        <div class="showcase-meta">
+          <span>28 products</span>
+          <span class="showcase-dot"></span>
+          <span>스킨케어 · 메이크업</span>
+        </div>
+        <div class="showcase-cta">지금 보기 →</div>
+      </div>
+    </div>
+
+    <!-- Bottom right -->
+    <div class="showcase-item">
+      <div class="showcase-bg" style="background:linear-gradient(135deg,#3A5068 0%,#1A2D40 100%)">
+        <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
+          <rect x="20" y="20" width="120" height="120" rx="4" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+          <rect x="40" y="40" width="80" height="80" rx="40" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+          <line x1="20" y1="80" x2="140" y2="80" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <line x1="80" y1="20" x2="80" y2="140" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <circle cx="80" cy="80" r="12" fill="rgba(143,173,140,0.3)" stroke="rgba(143,173,140,0.5)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="showcase-overlay"></div>
+      <div class="showcase-info">
+        <div class="showcase-season">Wellness · 2025</div>
+        <div class="showcase-name">Daily<br>Ritual</div>
+        <div class="showcase-meta">
+          <span>영양제 · 건강식</span>
+          <span class="showcase-dot"></span>
+          <span>15 picks</span>
+        </div>
+        <div class="showcase-cta">루틴 만들기 →</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Chilli <span>Pappers</span></div>
+        <p class="footer-tagline">화장품, 패션, 건강식까지 — 당신의 감각적인 일상을 위한 모든 것을 큐레이션합니다.</p>
+      </div>
+      <div>
+        <div class="footer-h">쇼핑</div>
+        <div class="footer-links">
+          <a>화장품</a>
+          <a>스킨케어</a>
+          <a>패션</a>
+          <a>Showcase</a>
+          <a>영양제</a>
+          <a>건강식</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-h">고객센터</div>
+        <div class="footer-links">
+          <a>자주 묻는 질문</a>
+          <a>배송 안내</a>
+          <a>교환 · 반품</a>
+          <a>멤버십</a>
+          <a>1:1 문의</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-h">회사</div>
+        <div class="footer-links">
+          <a>브랜드 소개</a>
+          <a>파트너 입점</a>
+          <a>채용</a>
+          <a>공지사항</a>
+          <a>개인정보처리방침</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Chilli Pappers Inc. All rights reserved.</span>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(255,255,255,0.15);letter-spacing:0.15em">Chilli Pappers</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+  /* ── Firebase 초기화 ── */
+  const firebaseConfig = {
+    apiKey: "AIzaSyAy16ROwo8vtUitlFWegXrrAs7wOHbOsXE",
+    authDomain: "our-records.firebaseapp.com",
+    projectId: "our-records",
+    storageBucket: "our-records.firebasestorage.app",
+    messagingSenderId: "1008269378494",
+    appId: "1:1008269378494:web:6df4b251ae90bc09a3efef"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  /* ── 카테고리 탭 ── */
+  function switchCat(el, cat) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  /* ── 상품 카드 생성 ── */
+  const catBg = { '화장품':'#F2EDE8','패션':'#EEF0F2','영양제':'#EDF0EC','건강식':'#F0EEE8' };
+  const catEmoji = { '화장품':'✨','패션':'👗','영양제':'💊','건강식':'🥗' };
+
+  function makeProductCard(p) {
+    const bg = catBg[p.cat] || '#F5F3F0';
+    const emoji = catEmoji[p.cat] || '📦';
+    const statusTag = p.status === 'sale'
+      ? '<span class="product-tag tag-sale">Sale</span>'
+      : p.status === 'active' ? '' : '';
+    const saleLine = p.salePrice && p.salePrice !== p.price
+      ? `<span class="price-was">${p.price}</span>`
+      : '';
+    const displayPrice = p.salePrice || p.price;
+
+    return `<div class="product-card">
+      <div class="product-img" style="background:${bg}">
+        ${statusTag}
+        <button class="wishlist-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <div style="font-size:52px;opacity:0.35">${emoji}</div>
+      </div>
+      <div class="product-info">
+        <div class="brand-name">${p.brand || ''}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">
+          <span class="price-now">${displayPrice}</span>
+          ${saleLine}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  /* ── 상품 실시간 로딩 ── */
+  function loadProducts() {
+    const grid = document.getElementById('product-grid');
+    if (!grid) return;
+
+    db.collection('products')
+      .where('status', 'in', ['active', 'sale'])
+      .onSnapshot(snapshot => {
+        if (snapshot.empty) {
+          grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--warm-gray)">
+            <div style="font-size:36px;margin-bottom:12px">🛍</div>
+            <div>곧 멋진 상품들이 채워질 예정이에요.</div>
+          </div>`;
+          return;
+        }
+        grid.innerHTML = snapshot.docs.map(doc => makeProductCard(doc.data())).join('');
+
+        // 스크롤 애니메이션 재적용
+        grid.querySelectorAll('.product-card').forEach((el, i) => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(20px)';
+          el.style.transition = `opacity 0.5s ease ${i*0.08}s, transform 0.5s ease ${i*0.08}s`;
+          setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 50);
+        });
+      }, err => {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#C0392B;font-size:12px">연결 오류: ${err.message}</div>`;
+      });
+  }
+
+  /* ── 스크롤 애니메이션 ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.supp-card, .showcase-item, .cat-banner').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+
+  /* ── 시작 ── */
+  loadProducts();
+</script>
+</body>
+</html>
